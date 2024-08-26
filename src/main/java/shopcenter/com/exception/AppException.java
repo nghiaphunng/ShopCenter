@@ -1,6 +1,7 @@
 package shopcenter.com.exception;
 
 public class AppException extends RuntimeException{
+	private static final long serialVersionUID = 1L;
 	private ErrorCode errorCode;
 		
 	public AppException(ErrorCode errorCode) {

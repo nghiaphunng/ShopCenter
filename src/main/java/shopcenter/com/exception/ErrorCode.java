@@ -15,9 +15,10 @@ public enum ErrorCode {
 	USER_EMAIL_INVALID(1005, "Please fill in email information", HttpStatus.BAD_REQUEST),
 	USER_NOT_EXISTED(1006, "user not existed", HttpStatus.NOT_FOUND),
 	SHOP_NOT_EXISTED(1007, "shop not existed", HttpStatus.NOT_FOUND),
-	USER_EMAIL_NOT_EXISTED(1008, "useremail not existed", HttpStatus.NOT_FOUND),
-	UNAUTHENTICATED(1009, "unauthenticated", HttpStatus.UNAUTHORIZED),
-	UNAUTHORIZED(1010, "you do not have permission", HttpStatus.FORBIDDEN)
+	PRODUCT_NOT_EXISTED(1008, "product not existed", HttpStatus.NOT_FOUND),
+	USER_EMAIL_NOT_EXISTED(1009, "useremail not existed", HttpStatus.NOT_FOUND),
+	UNAUTHENTICATED(1010, "unauthenticated", HttpStatus.UNAUTHORIZED),
+	UNAUTHORIZED(1011, "you do not have permission", HttpStatus.FORBIDDEN)
 	
 	;
 	

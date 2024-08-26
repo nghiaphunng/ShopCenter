@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import shopcenter.com.entity.Product;
 import shopcenter.com.entity.ProductVariant;
 import shopcenter.com.entity.User;
@@ -16,11 +17,15 @@ import shopcenter.com.exception.ErrorCode;
 import shopcenter.com.repository.ProductRepository;
 import shopcenter.com.repository.UserRepository;
 import shopcenter.com.request.create_product.CreateProductRequest;
+import shopcenter.com.request.update_product.UpdateProductRequest;
+import shopcenter.com.request.update_product.UpdateProductVariantRequest;
+import shopcenter.com.request.update_product.UpdateVariantAttributeRequest;
 import shopcenter.com.response.ProductInfoResponse;
 import shopcenter.com.response.ProductResponse;
 import shopcenter.com.response.ShopInfoResponse;
 import shopcenter.com.response.UserResponse;
 import shopcenter.com.response.create_product.CreateProductResponse;
+import shopcenter.com.response.update_product.UpdateProductResponse;
 import shopcenter.com.service.ProductService;
 
 @Service
@@ -78,6 +83,50 @@ public class ProductServiceImpl implements ProductService{
 		Product saveProduct = productRepository.save(product);
 		
 		return modelMapper.map(saveProduct, CreateProductResponse.class);
+	}
+
+	@Override
+	@Transactional
+	public UpdateProductResponse updateProduct(UpdateProductRequest updateProductRequest) {
+		Product product = productRepository.findById(updateProductRequest.getProductId())
+				.orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+		
+		//cập nhật các thuộc tính 
+		product.setCategory(updateProductRequest.getCategory());
+		product.setProductName(updateProductRequest.getProductName());
+		product.setProductDesc(updateProductRequest.getProductDesc());
+		
+		//xóa để nhập nhật lại theo put
+		product.getProductVariants().clear();
+		
+		for(UpdateProductVariantRequest variantRequest : updateProductRequest.getProductVariants()) {
+			ProductVariant variant = new ProductVariant();
+			variant.setPrice(variantRequest.getPrice());
+			variant.setQuantity(variantRequest.getQuantity());
+			variant.setProduct(product);			
+			product.getProductVariants().add(variant);
+			
+			for(UpdateVariantAttributeRequest attributeRequest : variantRequest.getVariantAttributes()) {
+				VariantAttribute attribute = new VariantAttribute();
+				attribute.setAttributeName(attributeRequest.getAttributeName());
+				attribute.setAttributeValue(attributeRequest.getAttributeValue());
+				attribute.setProductVariant(variant);
+				
+				variant.getVariantAttributes().add(attribute);
+			}
+		}
+		
+		productRepository.save(product);
+		
+		return modelMapper.map(product, UpdateProductResponse.class);
+	}
+
+	@Override
+	public void deleteProduct(Integer productId) {
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+		
+		productRepository.delete(product);
 	}
 
 }

@@ -11,6 +11,7 @@ import shopcenter.com.entity.VariantAttribute;
 import shopcenter.com.request.create_product.CreateProductRequest;
 import shopcenter.com.request.create_product.CreateProductVariantRequest;
 import shopcenter.com.request.create_product.CreateVariantAttributeRequest;
+//import shopcenter.com.request.update_product.UpdateProductRequest;
 import shopcenter.com.response.ProductInfoResponse;
 import shopcenter.com.response.ProductResponse;
 import shopcenter.com.response.ProductVariantResponse;
@@ -19,6 +20,7 @@ import shopcenter.com.response.VariantAttributeResponse;
 import shopcenter.com.response.create_product.CreateProductResponse;
 import shopcenter.com.response.create_product.CreateProductVariantResponse;
 import shopcenter.com.response.create_product.CreateVariantAttributeResponse;
+import shopcenter.com.response.update_product.UpdateProductResponse;
 
 @Configuration
 public class ModelMapperConfig {
@@ -116,6 +118,29 @@ public class ModelMapperConfig {
         	mapper.map(CreateVariantAttributeRequest::getAttributeName, VariantAttribute::setAttributeName);
         	mapper.map(CreateVariantAttributeRequest::getAttributeValue, VariantAttribute::setAttributeValue);
         });
+        
+        //Chuyển đổi UpdateProductRequest -> Product
+//        modelMapper.typeMap(UpdateProductRequest.class, Product.class).addMappings(mapper -> {
+//            mapper.map(UpdateProductRequest::getProductName, Product::setProductName);
+//            mapper.map(UpdateProductRequest::getProductDesc, Product::setProductDesc);
+//            mapper.map(UpdateProductRequest::getProductId, Product::setProductId);
+//            mapper.map(UpdateProductRequest::getProductVariants, Product::setProductVariants);
+//        });
+        
+        //chuyển đổi Product -> UpdateProductResponse
+        modelMapper.typeMap(Product.class, UpdateProductResponse.class).addMappings(mapper -> {
+        	mapper.map(src -> src.getUser().getUserId(), UpdateProductResponse::setShopId);
+            mapper.map(src -> src.getUser().getUserName(), UpdateProductResponse::setShopName);
+            mapper.map(Product::getProductId, UpdateProductResponse::setProductId);
+            mapper.map(Product::getProductName, UpdateProductResponse::setProductName);
+            mapper.map(Product::getProductDesc, UpdateProductResponse::setProductDesc);
+            mapper.map(Product::getCategory, UpdateProductResponse::setCategory);
+            mapper.map(Product::getProductVariants, UpdateProductResponse::setProductVariants);
+        });
+        
+        //chuyển đổi CreateProductVariantRequest -> ProductVariant
+        
+        //chuyển đổi CreateVariantAttributeRequest -> VariantAttribute
         
 		return modelMapper;
 	}
