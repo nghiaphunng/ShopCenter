@@ -43,9 +43,6 @@ public class Product {
 	@Column(name = "product_desc")
 	String productDesc;
 	
-	@Column(name ="category")
-	String category;
-	
 //	@ManyToOne(fetch = FetchType.LAZY)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name ="user_id")
@@ -55,5 +52,20 @@ public class Product {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	List<ProductVariant> productVariants = new ArrayList<>();
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    @JsonBackReference
+    Category category;
+	
+	@Column(name = "average_rating")
+	Double averageRating;
+	
+	@Column(name = "review_count")
+	Integer reviewCount;
+	
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@JsonManagedReference
+	List<Review> reviews = new ArrayList<>();
 }
 

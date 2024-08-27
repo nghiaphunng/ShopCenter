@@ -1,4 +1,4 @@
-package shopcenter.com.response;
+package shopcenter.com.response.detail_product;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
+public class ReviewProductDetailResponse {
 	Integer userId;
-	String userName;
-	String userEmail;
-	String userAddress;
 	String userFullName;
+	Integer rating;
+	String comment;
+	String updatedAt;
 }

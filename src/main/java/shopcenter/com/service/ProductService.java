@@ -7,6 +7,7 @@ import shopcenter.com.request.update_product.UpdateProductRequest;
 import shopcenter.com.response.ProductInfoResponse;
 import shopcenter.com.response.ShopInfoResponse;
 import shopcenter.com.response.create_product.CreateProductResponse;
+import shopcenter.com.response.detail_product.ProductDetailResponse;
 import shopcenter.com.response.update_product.UpdateProductResponse;
 
 public interface ProductService {
@@ -15,4 +16,7 @@ public interface ProductService {
 	CreateProductResponse createProduct(CreateProductRequest createProductRequest);
 	UpdateProductResponse updateProduct(UpdateProductRequest updateProductRequest);
 	void deleteProduct(Integer productId);
+	ProductDetailResponse getProductById(Integer productId);
+	public List<ProductInfoResponse> getProductsByFilter(String keyword, Integer categoryId, Double minPrice,
+			Double maxPrice, Double minRating, String color, String size, String stockStatus, Boolean sortByReviewCount);
 }

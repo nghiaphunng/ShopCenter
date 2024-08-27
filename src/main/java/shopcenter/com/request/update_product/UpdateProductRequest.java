@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 public class UpdateProductRequest {
 	String productName;
     String productDesc;
-    String category;
+    Integer categoryId;
     Integer productId;
     List<UpdateProductVariantRequest> productVariants;
 }

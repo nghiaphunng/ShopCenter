@@ -8,23 +8,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import shopcenter.com.entity.Category;
 import shopcenter.com.entity.Product;
 import shopcenter.com.entity.ProductVariant;
 import shopcenter.com.entity.User;
 import shopcenter.com.entity.VariantAttribute;
 import shopcenter.com.exception.AppException;
 import shopcenter.com.exception.ErrorCode;
+import shopcenter.com.repository.CategoryRepository;
 import shopcenter.com.repository.ProductRepository;
 import shopcenter.com.repository.UserRepository;
 import shopcenter.com.request.create_product.CreateProductRequest;
 import shopcenter.com.request.update_product.UpdateProductRequest;
 import shopcenter.com.request.update_product.UpdateProductVariantRequest;
 import shopcenter.com.request.update_product.UpdateVariantAttributeRequest;
+import shopcenter.com.response.CategoryResponse;
 import shopcenter.com.response.ProductInfoResponse;
 import shopcenter.com.response.ProductResponse;
+import shopcenter.com.response.ProductVariantResponse;
 import shopcenter.com.response.ShopInfoResponse;
 import shopcenter.com.response.UserResponse;
 import shopcenter.com.response.create_product.CreateProductResponse;
+import shopcenter.com.response.detail_product.ProductDetailResponse;
+import shopcenter.com.response.detail_product.ReviewProductDetailResponse;
 import shopcenter.com.response.update_product.UpdateProductResponse;
 import shopcenter.com.service.ProductService;
 
@@ -38,6 +44,10 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
 	
 	@Override
 	public ShopInfoResponse getProductsByShopId(Integer userId) {
@@ -70,8 +80,20 @@ public class ProductServiceImpl implements ProductService{
 		User shop = userRepository.findById(createProductRequest.getShopId())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
-		Product product = modelMapper.map(createProductRequest, Product.class);
+		Category category = categoryRepository.findById(createProductRequest.getCategoryId())
+				.orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
+				
+//		Product product = modelMapper.map(createProductRequest, Product.class);
+		Product product = new Product();
+		product.setProductName(createProductRequest.getProductName());
+		product.setProductDesc(createProductRequest.getProductDesc());
+		List<ProductVariant> productVariants = createProductRequest.getProductVariants().stream()
+													.map(variant -> modelMapper.map(variant, ProductVariant.class))
+													.collect(Collectors.toList());
+		
+		product.setProductVariants(productVariants);
 		product.setUser(shop);
+		product.setCategory(category);
 		
 		for(ProductVariant variant : product.getProductVariants()) {
 			variant.setProduct(product);
@@ -91,8 +113,11 @@ public class ProductServiceImpl implements ProductService{
 		Product product = productRepository.findById(updateProductRequest.getProductId())
 				.orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 		
-		//cập nhật các thuộc tính 
-		product.setCategory(updateProductRequest.getCategory());
+		//cập nhật các thuộc tính
+		Category category = categoryRepository.findById(updateProductRequest.getCategoryId())
+				.orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
+		
+		product.setCategory(category);
 		product.setProductName(updateProductRequest.getProductName());
 		product.setProductDesc(updateProductRequest.getProductDesc());
 		
@@ -127,6 +152,43 @@ public class ProductServiceImpl implements ProductService{
 				.orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 		
 		productRepository.delete(product);
+	}
+
+	@Override
+	public ProductDetailResponse getProductById(Integer productId) {
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+		
+		ProductDetailResponse productDetailResponse = modelMapper.map(product, ProductDetailResponse.class);
+		
+		//cấu hình chuyển đổi thêm Product -> ProductDetailResponse
+		productDetailResponse.setShopId(product.getUser().getUserId());
+		productDetailResponse.setShopName(product.getUser().getUserFullName());
+		productDetailResponse.setShopAddress(product.getUser().getUserAddress());
+		productDetailResponse.setCategoryResponse(modelMapper.map(product.getCategory(), CategoryResponse.class));
+		
+		List<ProductVariantResponse> productVariantResponses = product.getProductVariants().stream()
+																		.map(variant -> modelMapper.map(variant, ProductVariantResponse.class))
+																		.collect(Collectors.toList());
+		
+		productDetailResponse.setProductVariantResponses(productVariantResponses);
+		
+		List<ReviewProductDetailResponse> reviewProductDetailResponses = product.getReviews().stream()
+																				.map(review -> modelMapper.map(review, ReviewProductDetailResponse.class))
+																				.collect(Collectors.toList());
+		productDetailResponse.setReviews(reviewProductDetailResponses);
+		
+		return productDetailResponse;
+	}
+
+	@Override
+	public List<ProductInfoResponse> getProductsByFilter(String keyword, Integer categoryId, Double minPrice,
+			Double maxPrice, Double minRating, String color, String size, String stockStatus, Boolean sortByReviewCount) {
+		List<Product> productsSearch = productRepository.searchProductsByFilter(keyword, categoryId, minPrice, maxPrice, minRating, color, size, stockStatus, sortByReviewCount);
+		
+		return productsSearch.stream()
+				.map(product -> modelMapper.map(product, ProductInfoResponse.class))
+				.collect(Collectors.toList());
 	}
 
 }

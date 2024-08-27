@@ -1,4 +1,4 @@
-package shopcenter.com.response;
+package shopcenter.com.request.create_review;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
+public class CreateReviewRequest {
 	Integer userId;
-	String userName;
-	String userEmail;
-	String userAddress;
-	String userFullName;
+	Integer productId;
+	Integer rating; // nhận 1 -> 5
+	String comment;
 }

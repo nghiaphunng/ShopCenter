@@ -16,9 +16,14 @@ public enum ErrorCode {
 	USER_NOT_EXISTED(1006, "user not existed", HttpStatus.NOT_FOUND),
 	SHOP_NOT_EXISTED(1007, "shop not existed", HttpStatus.NOT_FOUND),
 	PRODUCT_NOT_EXISTED(1008, "product not existed", HttpStatus.NOT_FOUND),
-	USER_EMAIL_NOT_EXISTED(1009, "useremail not existed", HttpStatus.NOT_FOUND),
-	UNAUTHENTICATED(1010, "unauthenticated", HttpStatus.UNAUTHORIZED),
-	UNAUTHORIZED(1011, "you do not have permission", HttpStatus.FORBIDDEN)
+	CATEGORY_NOT_EXISTED(1009, "product not existed", HttpStatus.NOT_FOUND),
+	CATEGORY_EXISTED(1009, "product not existed", HttpStatus.BAD_REQUEST),
+	REVIEW_EXISTED(1010, "review existed", HttpStatus.BAD_REQUEST),
+	REVIEW_NOT_EXISTED(1011, "review not existed", HttpStatus.NOT_FOUND),
+	USER_NOT_AUTHORIZED_REVIEW(1012, "user does not have permission to edit review", HttpStatus.NOT_FOUND),
+	USER_EMAIL_NOT_EXISTED(1013, "useremail not existed", HttpStatus.NOT_FOUND),
+	UNAUTHENTICATED(1014, "unauthenticated", HttpStatus.UNAUTHORIZED),
+	UNAUTHORIZED(1015, "you do not have permission", HttpStatus.FORBIDDEN)
 	
 	;
 	

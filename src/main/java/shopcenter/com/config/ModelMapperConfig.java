@@ -4,13 +4,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+//import shopcenter.com.entity.Category;
 import shopcenter.com.entity.Product;
 import shopcenter.com.entity.ProductVariant;
+//import shopcenter.com.entity.Review;
 import shopcenter.com.entity.User;
 import shopcenter.com.entity.VariantAttribute;
-import shopcenter.com.request.create_product.CreateProductRequest;
+//import shopcenter.com.entity.Category;
 import shopcenter.com.request.create_product.CreateProductVariantRequest;
 import shopcenter.com.request.create_product.CreateVariantAttributeRequest;
+//import shopcenter.com.entity.Category;
 //import shopcenter.com.request.update_product.UpdateProductRequest;
 import shopcenter.com.response.ProductInfoResponse;
 import shopcenter.com.response.ProductResponse;
@@ -20,6 +23,8 @@ import shopcenter.com.response.VariantAttributeResponse;
 import shopcenter.com.response.create_product.CreateProductResponse;
 import shopcenter.com.response.create_product.CreateProductVariantResponse;
 import shopcenter.com.response.create_product.CreateVariantAttributeResponse;
+//import shopcenter.com.response.detail_product.ProductDetailResponse;
+//import shopcenter.com.response.detail_product.ReviewProductDetailResponse;
 import shopcenter.com.response.update_product.UpdateProductResponse;
 
 @Configuration
@@ -27,12 +32,14 @@ public class ModelMapperConfig {
 	@Bean
 	ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-		
+
 		//chuyển đổi User -> UserResponse(thông tin người bán) 
 		modelMapper.typeMap(User.class, UserResponse.class).addMappings(mapper -> {
 			mapper.map(User::getUserId, UserResponse::setUserId);
-			mapper.map(User::getUserName, UserResponse::setUserName);
+			mapper.map(User::getUsername, UserResponse::setUserName);
 			mapper.map(User::getUserEmail, UserResponse::setUserEmail);
+			mapper.map(User::getUserFullName, UserResponse::setUserFullName);
+			mapper.map(User::getUserAddress, UserResponse::setUserAddress);
 		});
 		
 		//chuyển đổi Product -> ProductResponse
@@ -40,8 +47,8 @@ public class ModelMapperConfig {
 			mapper.map(Product::getProductId, ProductResponse::setProductId);
 			mapper.map(Product::getProductName, ProductResponse::setProductName);
 			mapper.map(Product::getProductDesc, ProductResponse::setProductDesc);
-			mapper.map(Product::getCategory, ProductResponse::setCategory);
-			mapper.map(src -> src.getProductVariants(), ProductResponse::setProductVariantResponses);
+			mapper.map(Product::getCategory, ProductResponse::setCategoryResponse);
+//			mapper.map(src -> src.getProductVariants(), ProductResponse::setProductVariantResponses);
 		});
 		
 		//chuyển đổi ProductVariant -> ProductVariantResponse
@@ -60,22 +67,22 @@ public class ModelMapperConfig {
 	        mapper.map(VariantAttribute::getAttributeValue, VariantAttributeResponse::setAttributeValue);
 		});
 		 
-		//chuyển đổi Proudct -> ProductInfoResponse (thực hiện chức năng getAll)
+		//chuyển đổi Product -> ProductInfoResponse (thực hiện chức năng getAll)
 		 modelMapper.typeMap(Product.class, ProductInfoResponse.class).addMappings(mapper -> {
 			mapper.map(src -> src.getUser().getUserId(), ProductInfoResponse::setShopId);
-			mapper.map(src -> src.getUser().getUserName(), ProductInfoResponse::setShopName);
+			mapper.map(src -> src.getUser().getUsername(), ProductInfoResponse::setShopName);
 			mapper.map(Product::getProductId, ProductInfoResponse::setProductId);
 			mapper.map(Product::getProductId, ProductInfoResponse::setProductId);
 			mapper.map(Product::getProductName, ProductInfoResponse::setProductName);
 			mapper.map(Product::getProductDesc, ProductInfoResponse::setProductDesc);
-			mapper.map(Product::getCategory, ProductInfoResponse::setCategory);
-			mapper.map(src -> src.getProductVariants(), ProductInfoResponse::setProductVariantResponses);
+			mapper.map(Product::getCategory, ProductInfoResponse::setCategoryResponse);
+//			mapper.map(src -> src.getProductVariants(), ProductInfoResponse::setProductVariantResponses);
 			});
 		 
 		// Chuyển đổi Product -> CreateProductResponse
         modelMapper.typeMap(Product.class, CreateProductResponse.class).addMappings(mapper -> {
             mapper.map(src -> src.getUser().getUserId(), CreateProductResponse::setShopId);
-            mapper.map(src -> src.getUser().getUserName(), CreateProductResponse::setShopName);
+            mapper.map(src -> src.getUser().getUsername(), CreateProductResponse::setShopName);
             mapper.map(Product::getProductId, CreateProductResponse::setProductId);
             mapper.map(Product::getProductName, CreateProductResponse::setProductName);
             mapper.map(Product::getProductDesc, CreateProductResponse::setProductDesc);
@@ -98,13 +105,14 @@ public class ModelMapperConfig {
         });
 	    
         //chuyển đổi CreateProductRequest -> Product
-        modelMapper.typeMap(CreateProductRequest.class, Product.class).addMappings(mapper -> {
-        	mapper.map(CreateProductRequest::getCategory, Product::setCategory);
-        	mapper.map(CreateProductRequest::getProductDesc, Product::setProductDesc);
-        	mapper.map(CreateProductRequest::getProductName, Product::setProductName);
-        	mapper.map(CreateProductRequest::getProductVariants, Product::setProductVariants);
-        });
-        
+//        modelMapper.typeMap(CreateProductRequest.class, Product.class).addMappings(mapper -> {
+//        	mapper.map(CreateProductRequest::getCategory, Product::setCategory);
+//        	
+//        	mapper.map(CreateProductRequest::getProductDesc, Product::setProductDesc);
+//        	mapper.map(CreateProductRequest::getProductName, Product::setProductName);
+//        	mapper.map(CreateProductRequest::getProductVariants, Product::setProductVariants);
+//        });
+//        
         //chuyển đổi CreateProductVariantRequest -> ProductVariant
         modelMapper.typeMap(CreateProductVariantRequest.class, ProductVariant.class).addMappings(mapper -> {
         	mapper.map(CreateProductVariantRequest::getPrice, ProductVariant::setPrice);
@@ -130,7 +138,7 @@ public class ModelMapperConfig {
         //chuyển đổi Product -> UpdateProductResponse
         modelMapper.typeMap(Product.class, UpdateProductResponse.class).addMappings(mapper -> {
         	mapper.map(src -> src.getUser().getUserId(), UpdateProductResponse::setShopId);
-            mapper.map(src -> src.getUser().getUserName(), UpdateProductResponse::setShopName);
+            mapper.map(src -> src.getUser().getUsername(), UpdateProductResponse::setShopName);
             mapper.map(Product::getProductId, UpdateProductResponse::setProductId);
             mapper.map(Product::getProductName, UpdateProductResponse::setProductName);
             mapper.map(Product::getProductDesc, UpdateProductResponse::setProductDesc);
@@ -142,6 +150,31 @@ public class ModelMapperConfig {
         
         //chuyển đổi CreateVariantAttributeRequest -> VariantAttribute
         
+        //chuyển đổi Product -> ProductDetailResponse
+//        modelMapper.typeMap(Product.class, ProductDetailResponse.class).addMappings(mapper -> {
+//        	mapper.map(src -> src.getUser().getUserId(), ProductDetailResponse::setShopId);
+//        	mapper.map(src -> src.getUser().getUserFullName(), ProductDetailResponse::setShopName);
+//        	mapper.map(src -> src.getUser().getUserAddress(), ProductDetailResponse::setShopAddress);
+//        	mapper.map(src -> src.getCategory(), ProductDetailResponse::setCategoryResponse);
+//        	mapper.map(src -> src.getProductVariants(), ProductDetailResponse::setProductVariantResponses);
+//        });
+        
+//        modelMapper.typeMap(Review.class, ReviewProductDetailResponse.class).addMappings(mapper -> {
+//            mapper.map(src -> src.getUpdatedAt().toString(), ReviewProductDetailResponse::setUpdatedAt);
+//        });
+        
+      //chuyển đổi Product -> ProductResponse (thực hiện chức năng lấy chi tiết 1 sản phẩm)
+		 modelMapper.typeMap(Product.class, ProductResponse.class).addMappings(mapper -> {
+			mapper.map(Product::getProductId, ProductResponse::setProductId);
+			mapper.map(Product::getProductId, ProductResponse::setProductId);
+			mapper.map(Product::getProductName, ProductResponse::setProductName);
+			mapper.map(Product::getProductDesc, ProductResponse::setProductDesc);
+			mapper.map(Product::getCategory, ProductResponse::setCategoryResponse);
+			mapper.map(Product::getReviewCount, ProductResponse::setReviewCount);
+			mapper.map(Product::getAverageRating, ProductResponse::setAverageRating);
+//			mapper.map(src -> src.getProductVariants(), ProductResponse::setProductVariantResponses);
+			});
+		 
 		return modelMapper;
 	}
 }

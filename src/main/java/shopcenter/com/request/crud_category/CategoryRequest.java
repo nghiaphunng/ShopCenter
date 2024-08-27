@@ -1,4 +1,4 @@
-package shopcenter.com.response;
+package shopcenter.com.request.crud_category;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-	Integer userId;
-	String userName;
-	String userEmail;
-	String userAddress;
-	String userFullName;
+public class CategoryRequest {
+	Integer categoryId;
+	String categoryName;
 }
