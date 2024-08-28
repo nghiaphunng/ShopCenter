@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import shopcenter.com.entity.User;
 import shopcenter.com.exception.AppException;
 import shopcenter.com.exception.ErrorCode;
 import shopcenter.com.repository.UserRepository;
@@ -19,5 +20,10 @@ public class UserServiceImpl implements UserService{
 		return username -> userRepository.findByUserName(username)
 								.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 	}
-
+	
+	@Override
+	public User getUserByEmail(String email) {
+		return userRepository.findByUserEmail(email)
+				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+	}
 }

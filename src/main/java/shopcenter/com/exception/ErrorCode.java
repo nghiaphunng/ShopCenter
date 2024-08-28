@@ -23,7 +23,13 @@ public enum ErrorCode {
 	USER_NOT_AUTHORIZED_REVIEW(1012, "user does not have permission to edit review", HttpStatus.NOT_FOUND),
 	USER_EMAIL_NOT_EXISTED(1013, "useremail not existed", HttpStatus.NOT_FOUND),
 	UNAUTHENTICATED(1014, "unauthenticated", HttpStatus.UNAUTHORIZED),
-	UNAUTHORIZED(1015, "you do not have permission", HttpStatus.FORBIDDEN)
+	UNAUTHORIZED(1015, "you do not have permission", HttpStatus.FORBIDDEN),
+	TOKEN_BLANK(1016, "token must be not blank", HttpStatus.BAD_REQUEST),
+	TOKEN_INVALID(1017, "token is invalid", HttpStatus.BAD_REQUEST),
+	TOKEN_NOT_EXISTED(1018, "token not exists", HttpStatus.NOT_FOUND),
+	PASSWORD_NOT_MATCH(1019, "password not match", HttpStatus.BAD_REQUEST),
+	TOKEN_TYPE_INVALID(1020, "token type invalid", HttpStatus.BAD_REQUEST),
+	USER_NOT_ACTIVE(1021, "user not active", HttpStatus.BAD_REQUEST)
 	
 	;
 	
