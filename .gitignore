@@ -40,5 +40,3 @@ application.yml
 *.log
 logs/
 
-### Mac system files ###
-.DS_Store
