@@ -3,7 +3,7 @@ package shopcenter.com.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import shopcenter.com.entity.Category;
+import shopcenter.com.core.entity.Category;
 import java.util.List;
 
 

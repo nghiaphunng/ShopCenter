@@ -3,10 +3,8 @@ package shopcenter.com.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import shopcenter.com.entity.User;
+import shopcenter.com.core.entity.User;
 import java.util.Optional;
-import java.util.List;
-
 
 
 @Repository

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import shopcenter.com.entity.Product;
+import shopcenter.com.core.entity.Product;
 import shopcenter.com.repository.CustomizedProductRepository;
 
 @Repository
